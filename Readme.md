@@ -1,7 +1,7 @@
 # Личный проект «Шесть городов»
 
 * Студент: [Alexander Vasilyev](https://up.htmlacademy.ru/nodejs-api/6/user/1634321).
-* Наставник: `Неизвестно`.
+* Наставник: `Rail Sakhaviev`.
 
 ---
 
