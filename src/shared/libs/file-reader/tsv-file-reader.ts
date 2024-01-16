@@ -13,13 +13,13 @@ export class TSVFileReader implements FileReader {
     const [latitude, longitude] = location.split(' ');
 
     return {
-      latitude: Number(latitude),
-      longitude: Number(longitude),
+      latitude: Number.parseFloat(latitude),
+      longitude:Number.parseFloat(longitude),
     };
   }
 
   private parseUser(user: string): User {
-    const [name, email, avatarPath, password, status] = user.split(' ');
+    const [name, email, avatarPath, password, status] = user.split(';');
     return {
       name,
       email,
