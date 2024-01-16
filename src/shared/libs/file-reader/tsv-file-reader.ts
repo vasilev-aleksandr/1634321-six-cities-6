@@ -10,10 +10,7 @@ export class TSVFileReader implements FileReader {
   ) {}
 
   private parseLocation(location: string): HousingLocation {
-    console.log(`location ${location}`);
     const [latitude, longitude] = location.split(' ');
-    console.log(`latitude ${latitude}`);
-    console.log(`longitude ${longitude}`);
 
     return {
       latitude: Number(latitude),
