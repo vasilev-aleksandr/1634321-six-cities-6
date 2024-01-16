@@ -13,8 +13,8 @@ export class TSVFileReader implements FileReader {
     const [latitude, longitude] = location.split(' ');
 
     return {
-      latitude: Number.parseFloat(latitude),
-      longitude:Number.parseFloat(longitude),
+      latitude: Number(latitude),
+      longitude:Number(longitude),
     };
   }
 
