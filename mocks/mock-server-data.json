@@ -14,19 +14,49 @@
 			"3.9 miles from Paris Expo – Porte de Versailles and 4 miles from Luxembourg Gardens, the property features a garden and a shared lounge. The accommodation provides a shared kitchen and bicycle parking for guests.",
 			"Located in the center of Paris, just 656 feet from Gare du Nord Train Station, St Christopher’s Inn Paris offers 2 bars and a chill-out room."
 		],
-		"postDate": [
-			"2024-01-07T10:15:45.279Z",
-			"2024-01-12T09:12:53.123Z",
-			"2024-01-16T09:10:12.342Z",
-			"2024-01-01T07:15:43.212Z",
-			"2024-01-03T11:11:11.111Z"
-		],
 		"city": [
-			"Paris",
-			"Paris",
-			"Paris",
-			"Paris",
-			"Paris"
+			{ 
+				"name": "Paris",
+				"location": {
+				    "latitude": 48.85661,
+				    "longitude": 2.351499
+			    }
+			},
+			{ 
+				"name": "Cologne",
+				"location": {
+				    "latitude": 50.938361,
+				    "longitude": 6.959974
+			    }
+			},
+			{ 
+				"name": "Brussels",
+				"location": {
+				    "latitude": 50.846557,
+				    "longitude": 4.351697
+			    }
+			},
+			{ 
+				"name": "Amsterdam",
+				"location": {
+				    "latitude": 52.370216,
+				    "longitude": 4.895168
+			    }
+			},
+			{ 
+				"name": "Hamburg",
+				"location": {
+				    "latitude": 53.550341,
+				    "longitude": 10.000654
+			    }
+			},
+			{ 
+				"name": "Dusseldorf",
+				"location": {
+				    "latitude": 51.225402,
+				    "longitude": 6.776314
+			    }
+			}
 		],
 		"preview": [
 			"https://cf.bstatic.com/xdata/images/hotel/max1280x900/238567453.jpg?k=a95b79cd5bdaaeb6736857986c851bba2cfbf9580e0cd90841857b6b01262ea4&o=&hp=1",
@@ -42,27 +72,6 @@
 			"https://cf.bstatic.com/xdata/images/hotel/max1280x900/269723683.jpg?k=d97beb78e06f8b4efe660a5e1698f0b646b2d49332ba159720cd7a6c4fb52dce&o=&hp=1",
 			"https://cf.bstatic.com/xdata/images/hotel/max1280x900/25237715.jpg?k=cf87ce5d66963047c9172b3b805de4e02cbc0567660b988452fa509b3dcaa124&o=&hp=1"
 		],
-		"isPremium": [
-			"true",
-			"false",
-			"false",
-			"false",
-			"true"
-		],
-		"isFavorite": [
-			"false",
-			"true",
-			"true",
-			"false",
-			"false"
-		],
-		"rating": [
-			4.9,
-			4.7,
-			5.0,
-			4.6,
-			4.7
-		],
 		"housingType": [
 			"hotel",
 			"house",
@@ -70,33 +79,14 @@
 			"apartment",
 			"room"
 		],
-		"rooms": [
-			2,
-			4,
-			1,
-			2,
-			1
-		],
-		"guests": [
-			2,
-			8,
-			2,
-			2,
-			1
-		],
-		"price": [
-			2000,
-			10000,
-			2500,
-			7000,
-			1500
-		],
 		"features": [
-			"Breakfast,Air conditioning,Fridge",
-			"Breakfast,Towels,Fridge,Washer,Laptop friendly workspace",
-			"Towels,Fridge,Air conditioning",
-			"Breakfast,Towels,Fridge,Air conditioning",
-			"Breakfast,Towels,Fridge,Air conditioning"
+			"Breakfast",
+			"Air conditioning",
+			"Laptop friendly workspace",
+			"Baby seat",
+			"Washer",
+			"Towels",
+			"Fridge"
 		],
 		"user": [
 			{
@@ -134,20 +124,6 @@
 				"password": "tom111",
 				"userStatus": "regular"
 			}
-		],
-		"reviewsAmount": [
-			12,
-			7,
-			11,
-			22,
-			5
-		],
-		"location": [
-			"48.85661 2.351499",
-			"48.85661 2.351499",
-			"48.85661 2.351499",
-			"48.85661 2.351499",
-			"48.85661 2.351499"
 		]
 	}
 }

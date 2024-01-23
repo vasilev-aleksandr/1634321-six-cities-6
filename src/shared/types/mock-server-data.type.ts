@@ -1,11 +1,10 @@
-import { User } from './user.type.js';
-import { HousingType, HousingFeature, HousingLocation } from './housing.type.js';
+import { User, HousingType, HousingFeature, HousingLocation, City } from './index.js';
 
 export type MockServerData = {
     title: string[];
     description: string[];
     postDate: Date[];
-    city: string[];
+    city: City[];
     preview: string[];
     images: string[];
     isPremium: boolean[];
