@@ -1,0 +1,129 @@
+{
+  "api": {
+		"title": [
+			"The Originals Boutique",
+			"La Bulle Mairie de Montreuil",
+			"Maison à 23 minutes de paris",
+			"Villa Sunshine",
+			"St Christopher's Inn Paris"
+		],
+		"description": [
+			"Located within 1.3 mi of Sacré-Coeur, The Originals Boutique, Hôtel Maison Montmartre Paris Les Puces has a number of amenities including a terrace, a bar and on-site dining.",
+			"Set in Montreuil, 7.8 km from Pompidou Centre, La Bulle Mairie de Montreuil offers accommodation with a terrace, free WiFi and private check-in and check-out.",
+			"Situated 12 km from Gare du Nord, maison à 23 minutes de paris offers accommodation in Rosny-sous-Bois with access to a hot tub.",
+			"3.9 miles from Paris Expo – Porte de Versailles and 4 miles from Luxembourg Gardens, the property features a garden and a shared lounge. The accommodation provides a shared kitchen and bicycle parking for guests.",
+			"Located in the center of Paris, just 656 feet from Gare du Nord Train Station, St Christopher’s Inn Paris offers 2 bars and a chill-out room."
+		],
+		"city": [
+			{ 
+				"name": "Paris",
+				"location": {
+				    "latitude": 48.85661,
+				    "longitude": 2.351499
+			    }
+			},
+			{ 
+				"name": "Cologne",
+				"location": {
+				    "latitude": 50.938361,
+				    "longitude": 6.959974
+			    }
+			},
+			{ 
+				"name": "Brussels",
+				"location": {
+				    "latitude": 50.846557,
+				    "longitude": 4.351697
+			    }
+			},
+			{ 
+				"name": "Amsterdam",
+				"location": {
+				    "latitude": 52.370216,
+				    "longitude": 4.895168
+			    }
+			},
+			{ 
+				"name": "Hamburg",
+				"location": {
+				    "latitude": 53.550341,
+				    "longitude": 10.000654
+			    }
+			},
+			{ 
+				"name": "Dusseldorf",
+				"location": {
+				    "latitude": 51.225402,
+				    "longitude": 6.776314
+			    }
+			}
+		],
+		"preview": [
+			"https://cf.bstatic.com/xdata/images/hotel/max1280x900/238567453.jpg?k=a95b79cd5bdaaeb6736857986c851bba2cfbf9580e0cd90841857b6b01262ea4&o=&hp=1",
+			"https://cf.bstatic.com/xdata/images/hotel/max1280x900/311025644.jpg?k=32b023b737a5c52e71beade5c36999bf7f4e893adad4aac9ccaf745ad86567e0&o=&hp=1",
+			"https://cf.bstatic.com/xdata/images/hotel/max1280x900/498660113.jpg?k=ab540e410736a87007fcea61e9104c956eebfc93b369f207c7e63b7341b2c11e&o=&hp=1",
+			"https://cf.bstatic.com/xdata/images/hotel/max1280x900/264082239.jpg?k=28fb46289f2b349ffebb3664cc2d4c2a1fc5954db0d37581113ca88a1f055dc1&o=&hp=1",
+			"https://cf.bstatic.com/xdata/images/hotel/max1280x900/192940958.jpg?k=58bcba1d0528658934786fb80a9cd87581b20180f71c2505e5d4f399da783beb&o=&hp=1"
+		],
+		"images": [
+			"https://cf.bstatic.com/xdata/images/hotel/max1280x900/314670210.jpg?k=7241c62fc7079f47201fa7147229fa56c9da45cffb34bda3ccebd96ffe6652c7&o=&hp=1",
+			"https://cf.bstatic.com/xdata/images/hotel/max1280x900/311025636.jpg?k=fbc7a67c0623903be3e4b75688481c89346bc1ba1b50881dd20e213da1a5f2d9&o=&hp=1",
+			"https://cf.bstatic.com/xdata/images/hotel/max1280x900/498660354.jpg?k=e1b5f3eb132c9fc73c003e9df44ea8fee30ff2321c5475dafcdc8bcdbd546ddc&o=&hp=1",
+			"https://cf.bstatic.com/xdata/images/hotel/max1280x900/269723683.jpg?k=d97beb78e06f8b4efe660a5e1698f0b646b2d49332ba159720cd7a6c4fb52dce&o=&hp=1",
+			"https://cf.bstatic.com/xdata/images/hotel/max1280x900/25237715.jpg?k=cf87ce5d66963047c9172b3b805de4e02cbc0567660b988452fa509b3dcaa124&o=&hp=1"
+		],
+		"housingType": [
+			"hotel",
+			"house",
+			"hotel",
+			"apartment",
+			"room"
+		],
+		"features": [
+			"Breakfast",
+			"Air conditioning",
+			"Laptop friendly workspace",
+			"Baby seat",
+			"Washer",
+			"Towels",
+			"Fridge"
+		],
+		"user": [
+			{
+				"name": "Alex",
+				"email": "alex@gmail.com",
+				"avatarPath": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.businessinsider.com%2Fargentina-finmin-says-citi-made-a-deal-with-the-devil-2015-4&psig=AOvVaw28qQ14wpujO1-G0BLXjFex&ust=1705836925153000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCPCS5vHv64MDFQAAAAAdAAAAABAX",
+				"password": "alex555",
+				"userStatus": "pro"
+			},
+			{
+				"name": "Pete",
+				"email": "pete@gmail.com",
+				"avatarPath": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.businessinsider.com%2Fargentina-finmin-says-citi-made-a-deal-with-the-devil-2015-4&psig=AOvVaw28qQ14wpujO1-G0BLXjFex&ust=1705836925153000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCPCS5vHv64MDFQAAAAAdAAAAABAX",
+				"password": "pete666",
+				"userStatus": "regular"
+			},
+			{
+				"name": "Sam",
+				"email": "sam@gmail.com",
+				"avatarPath": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.businessinsider.com%2Fargentina-finmin-says-citi-made-a-deal-with-the-devil-2015-4&psig=AOvVaw28qQ14wpujO1-G0BLXjFex&ust=1705836925153000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCPCS5vHv64MDFQAAAAAdAAAAABAX",
+				"password": "sam777",
+				"userStatus": "regular"
+			},
+			{
+				"name": "George",
+				"email": "george@gmail.com",
+				"avatarPath": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.businessinsider.com%2Fargentina-finmin-says-citi-made-a-deal-with-the-devil-2015-4&psig=AOvVaw28qQ14wpujO1-G0BLXjFex&ust=1705836925153000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCPCS5vHv64MDFQAAAAAdAAAAABAX",
+				"password": "george000",
+				"userStatus": "pro"
+			},
+			{
+				"name": "Tom",
+				"email": "alex@gmail.com",
+				"avatarPath": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.businessinsider.com%2Fargentina-finmin-says-citi-made-a-deal-with-the-devil-2015-4&psig=AOvVaw28qQ14wpujO1-G0BLXjFex&ust=1705836925153000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCPCS5vHv64MDFQAAAAAdAAAAABAX",
+				"password": "tom111",
+				"userStatus": "regular"
+			}
+		]
+	}
+}
