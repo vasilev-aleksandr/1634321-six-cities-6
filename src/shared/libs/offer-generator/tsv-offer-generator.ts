@@ -35,7 +35,7 @@ export class TSVOfferGenerator implements OfferGenerator {
     const features = getRandomItems(this.mockData.features).join(',');
     const author = Object.values(getRandomItem(this.mockData.user)).join(';');
     const reviewsAmount = generateRandomValue(1, 100).toString();
-    const location = Object.values(cityData.location).join(' ');;
+    const location = Object.values(cityData.location).join(' ');
     const postDate = dayjs()
       .subtract(generateRandomValue(FIRST_WEEK_DAY, LAST_WEEK_DAY), 'day')
       .toISOString();
