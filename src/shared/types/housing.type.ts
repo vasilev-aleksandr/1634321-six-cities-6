@@ -1,6 +1,11 @@
 import { User } from './user.type.js';
 
-export type HousingType = 'apartment' | 'house' | 'room' | 'hotel';
+export enum HousingType {
+  apartment = 'apartment',
+  house = 'house',
+  room = 'room',
+  hotel = 'hotel',
+}
 
 export type HousingFeature =
   | 'Breakfast'
