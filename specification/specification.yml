@@ -1,0 +1,496 @@
+openapi: 3.0.0
+info:
+  title: API сервер для проекта "Шесть городов".
+  description: |-
+    * Список ресурсов и маршрутов сервера "Шесть городов".
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 2.0.0
+tags:
+  - name: housings
+    description: Действия с предложениями об аренде.
+  - name: comments
+    description: Действия с комментариями.
+  - name: users
+    description: Действия с пользователем.
+
+paths:
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Регистрация пользователя
+      description: Регистрирует нового пользователя.
+
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+        required: true
+
+      responses:
+        "201":
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+        "409":
+          description: Пользователь с таким email уже существует.
+
+
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Авторизация пользователя
+      description: Авторизует пользователя на основе логина и пароля
+
+      requestBody:
+        description: Информация авторизации пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginUser'
+        required: true
+
+      responses:
+        "201":
+          description: Пользователь авторизирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+        "400":
+          description: Пользователь с таким email не существует.
+
+        "401":
+          description: Неверный пароль.
+
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя
+      description: Возвращает информацию по авторизованному пользователю
+
+      responses:
+        "201":
+          description: Состояние пользователя. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userStatus'
+
+        "400":
+          description: Пользователь с таким email не существует.
+      
+
+  /users/{userId}/avatar:
+    post:
+      tags:
+        - users
+      summary: Загрузить изображение аватара
+      description: Загружает изображение аватара пользователя. Изображение
+        аватара должно быть в формате `png` или `jpg`.
+
+      requestBody:
+        description: Информация для добавления аватара пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userAvatar'
+        required: true
+
+      responses:
+        "201":
+          description: Аватар добавлен. Объект автара.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userAvatar'
+
+        "415":
+          description: Недопустимый формат файла.
+  
+  /housings:
+    get:
+      tags:
+        - housings
+      summary: Список предложений по аренде 
+      description: Получает список предложений по аренде
+
+
+      responses:
+        "201":
+          description: Список предложений по аренде . Объект предложения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+  
+  /housings/register:
+    post:
+      tags:
+        - housings
+      summary: Добавление нового предложения 
+      description: Добавляет новое предложение.
+
+      requestBody:
+        description: Информация для создания нового предложения.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+        required: true
+
+      responses:
+        "201":
+          description: Предложение зарегистрировано. Объект предложения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+
+        "400":
+          description: Не все необходимые поля переданы.
+
+  /housings/{id}:
+    get:
+      tags:
+        - housings
+      summary: Детальная информация по предложению 
+      description: Получает детальную информацию по предложению.
+
+
+      responses:
+        "201":
+          description: Детальная информация по предложению . Объект предложения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+    patch:
+      tags:
+        - housings
+      summary: Редактирование предложения 
+      description: Редактирует предложение.
+
+      requestBody:
+        description: Информация для редактирования предложения.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+        required: true
+
+      responses:
+        "201":
+          description: Предложение отредактировано. Объект предложения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+
+    delete:
+      tags:
+        - housings
+      summary: Удаление предложения 
+      description: Удаляет предложение.
+
+      responses:
+        "201":
+          description: Предложение удалено
+        "403":
+          description: Нет доступа к данному предложению
+
+  /housings/{id}/comments:
+    get:
+      tags:
+        - comments
+      summary: Список комментариев для предложения
+      description: Получает cписок комментариев для предложения.
+
+
+      responses:
+        "201":
+          description: Список комментариев для предложения . Объекты комментариев.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+    post: 
+      tags:
+        - comments
+      summary: Добавление комментария
+      description: Добавляет комментарий для предложения
+      
+      requestBody:
+        description: Информация для добавления комментария.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/comment'
+        required: true
+
+      responses:
+        "201":
+          description: Комментарий добавлен. Объект комментария.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+
+components:
+  schemas:
+    createUser:
+      type: object
+
+      properties:
+        email:
+          type: string
+          example: test@gmail.com
+
+        firstname:
+          type: string
+          example: Aleksandr
+
+        lastname:
+          type: string
+          example: Vasilev
+
+        password:
+          type: string
+          format: password
+          example: qwerty12345
+
+    user:
+      type: object
+
+      properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+
+        email:
+          type: string
+          example: test@gmail.com
+
+    loginUser: 
+      type: object
+
+      properties:
+        email:
+          type: string
+          example: test@gmail.com
+
+        password:
+          type: string
+          format: password
+          example: qwerty12345
+
+    userAvatar:
+      type: object
+
+      properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+        
+        avatarPath:
+          type: string
+          example: https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FTerminator_%2528character%2529&psig=AOvVaw3eq3TlAsJ1YTaKGr53lqsK&ust=1707654041605000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJjXnZbhoIQDFQAAAAAdAAAAABAE
+
+    userStatus: 
+      type: object
+
+      properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+        
+        avatarPath:
+          type: string
+          example: https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FTerminator_%2528character%2529&psig=AOvVaw3eq3TlAsJ1YTaKGr53lqsK&ust=1707654041605000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJjXnZbhoIQDFQAAAAAdAAAAABAE
+        
+        firstname:
+          type: string
+          example: Aleksandr
+
+        lastname:
+          type: string
+          example: Vasilev
+
+        userStatus: 
+          type: string
+          example: pro
+    
+    createOffer:
+      type: object
+
+      properties: 
+        title:
+          type: string
+          example: Hilton Hotel  
+        
+        description: 
+          type: string
+          example: 5 Stars Hotel in the best area of Paris 
+
+        postDate: 
+          type: string
+          example: '2024-01-09T11:45:12.169Z'
+
+        city: 
+          type: string
+          example: Paris
+        
+        preview: 
+          type: string
+          example: https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FTerminator_%2528character%2529&psig=AOvVaw3eq3TlAsJ1YTaKGr53lqsK&ust=1707654041605000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJjXnZbhoIQDFQAAAAAdAAAAABAE
+        
+        images: 
+          type: string
+          example: https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FTerminator_%2528character%2529&psig=AOvVaw3eq3TlAsJ1YTaKGr53lqsK&ust=1707654041605000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJjXnZbhoIQDFQAAAAAdAAAAABAE
+
+        isPremium: 
+          type: boolean
+          example: true
+
+        isFavorite: 
+          type: boolean
+          example: true
+
+        rating: 
+          type: integer
+          example: 7
+        
+        housingType:
+          type: string
+          example: Hotel
+
+        rooms:
+          type: integer
+          example: 2
+        
+        guests:
+          type: integer
+          example: 4
+        
+        price:
+          type: integer
+          example: 5000
+
+        features: 
+          type: string
+          example: Breakfast
+
+        user: 
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+
+        reviewsAmount:
+          type: integer
+          example: 4
+
+        location: 
+          type: string
+          example: '48.85661 2.351499'
+
+    offer:
+      type: object
+
+      properties: 
+        id: 
+          type: string
+          example: 1fhhfh19299292jjgfl12
+
+        title:
+          type: string
+          example: Hilton Hotel  
+        
+        description: 
+          type: string
+          example: 5 Stars Hotel in the best area of Paris 
+
+        postDate: 
+          type: string
+          example: '2024-01-09T11:45:12.169Z'
+
+        city: 
+          type: string
+          example: Paris
+        
+        preview: 
+          type: string
+          example: https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FTerminator_%2528character%2529&psig=AOvVaw3eq3TlAsJ1YTaKGr53lqsK&ust=1707654041605000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJjXnZbhoIQDFQAAAAAdAAAAABAE
+        
+        images: 
+          type: string
+          example: https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FTerminator_%2528character%2529&psig=AOvVaw3eq3TlAsJ1YTaKGr53lqsK&ust=1707654041605000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJjXnZbhoIQDFQAAAAAdAAAAABAE
+
+        isPremium: 
+          type: boolean
+          example: true
+
+        isFavorite: 
+          type: boolean
+          example: true
+
+        rating: 
+          type: integer
+          example: 7
+        
+        housingType:
+          type: string
+          example: Hotel
+
+        rooms:
+          type: integer
+          example: 2
+        
+        guests:
+          type: integer
+          example: 4
+        
+        price:
+          type: integer
+          example: 5000
+
+        features: 
+          type: string
+          example: Breakfast
+
+        userId: 
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+
+        reviewsAmount:
+          type: integer
+          example: 4
+
+        location: 
+          type: string
+          example: '48.85661 2.351499'
+
+    comment:
+      type: object
+
+      properties:
+        text: 
+          type: string
+          example: Amazing hotel! Can't wait to get back!
+        postDate:
+          type: string
+          example: '2024-01-09T11:45:12.169Z'
+        rating:
+          type: integer
+          example: 4
+        userId: 
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+ 
