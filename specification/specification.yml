@@ -41,6 +41,8 @@ paths:
 
         "409":
           description: Пользователь с таким email уже существует.
+        "400":
+          description: Ошибка валидации данных.
 
 
   /users/login:
@@ -59,7 +61,7 @@ paths:
         required: true
 
       responses:
-        "201":
+        "200":
           description: Пользователь авторизирован. Объект пользователя.
           content:
             application/json:
@@ -69,7 +71,7 @@ paths:
         "400":
           description: Пользователь с таким email не существует.
 
-        "401":
+        "403":
           description: Неверный пароль.
 
     get:
@@ -79,44 +81,17 @@ paths:
       description: Возвращает информацию по авторизованному пользователю
 
       responses:
-        "201":
+        "200":
           description: Состояние пользователя. Объект пользователя.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/userStatus'
 
-        "400":
+        "401":
           description: Пользователь с таким email не существует.
       
 
-  /users/{userId}/avatar:
-    post:
-      tags:
-        - users
-      summary: Загрузить изображение аватара
-      description: Загружает изображение аватара пользователя. Изображение
-        аватара должно быть в формате `png` или `jpg`.
-
-      requestBody:
-        description: Информация для добавления аватара пользователя.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/userAvatar'
-        required: true
-
-      responses:
-        "201":
-          description: Аватар добавлен. Объект автара.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/userAvatar'
-
-        "415":
-          description: Недопустимый формат файла.
-  
   /housings:
     get:
       tags:
@@ -126,7 +101,7 @@ paths:
 
 
       responses:
-        "201":
+        "200":
           description: Список предложений по аренде . Объект предложения.
           content:
             application/json:
@@ -157,7 +132,8 @@ paths:
                 $ref: '#/components/schemas/offer'
 
         "400":
-          description: Не все необходимые поля переданы.
+          description: Ошибка валидации данных.
+
 
   /housings/{id}:
     get:
@@ -166,6 +142,14 @@ paths:
       summary: Детальная информация по предложению 
       description: Получает детальную информацию по предложению.
 
+      parameters:
+       - name: id
+         description: Идентификатор предложения
+         in: path
+         required: true
+         schema:
+           type: string
+           example: 6329c3d6a04ab1061c6425ea
 
       responses:
         "201":
@@ -174,11 +158,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/offer'
+
+        "404":
+          description: Предложение не найдено.
+
     patch:
       tags:
         - housings
       summary: Редактирование предложения 
       description: Редактирует предложение.
+
+      parameters:
+       - name: id
+         description: Идентификатор предложения
+         in: path
+         required: true
+         schema:
+           type: string
+           example: 6329c3d6a04ab1061c6425ea
 
       requestBody:
         description: Информация для редактирования предложения.
@@ -189,12 +186,21 @@ paths:
         required: true
 
       responses:
-        "201":
+        "200":
           description: Предложение отредактировано. Объект предложения.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/offer'
+
+        "400":
+          description: Ошибка валидации данных.
+
+        "403":
+          description: Нет доступа к данному предложению. Попытка редактирования чужого предложения
+
+        "404":
+          description: Предложение не найдено.
 
     delete:
       tags:
@@ -202,11 +208,24 @@ paths:
       summary: Удаление предложения 
       description: Удаляет предложение.
 
+      parameters:
+       - name: id
+         description: Идентификатор предложения
+         in: path
+         required: true
+         schema:
+           type: string
+           example: 6329c3d6a04ab1061c6425ea
+
       responses:
-        "201":
-          description: Предложение удалено
+        "204":
+          description: Нет содержимого
+
         "403":
-          description: Нет доступа к данному предложению
+          description: Нет доступа к данному предложению. Попытка удаления чужого предложения
+
+        "404":
+          description: Предложение не найдено.
 
   /housings/{id}/comments:
     get:
@@ -215,19 +234,40 @@ paths:
       summary: Список комментариев для предложения
       description: Получает cписок комментариев для предложения.
 
+      parameters:
+       - name: id
+         description: Идентификатор предложения
+         in: path
+         required: true
+         schema:
+           type: string
+           example: 6329c3d6a04ab1061c6425ea
 
       responses:
-        "201":
+        "200":
           description: Список комментариев для предложения . Объекты комментариев.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/comment'
+
+        "404":
+          description: Предложение не найдено.
+
     post: 
       tags:
         - comments
       summary: Добавление комментария
       description: Добавляет комментарий для предложения
+
+      parameters:
+       - name: id
+         description: Идентификатор предложения
+         in: path
+         required: true
+         schema:
+           type: string
+           example: 6329c3d6a04ab1061c6425ea
       
       requestBody:
         description: Информация для добавления комментария.
@@ -238,12 +278,15 @@ paths:
         required: true
 
       responses:
-        "201":
+        "200":
           description: Комментарий добавлен. Объект комментария.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/comment'
+
+        "400":
+          description: Ошибка валидации данных.
 
 components:
   schemas:
