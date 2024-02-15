@@ -90,7 +90,27 @@ paths:
 
         "401":
           description: Пользователь с таким email не существует.
-      
+
+  /users/logout:
+    post:
+      tags:
+        - users
+      summary: Завершение сессии пользователя
+
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+            example: jhh3232jkjjj23ghjggg23323dffdfj3g232==
+
+      responses:
+        "204":
+          description: Сессия завершена
+
+        "401":
+          description: Пользователь не авторизован
 
   /housings:
     get:
@@ -102,12 +122,57 @@ paths:
 
       responses:
         "200":
-          description: Список предложений по аренде . Объект предложения.
+          description: Список предложений по аренде . Объекты предложений.
           content:
             application/json:
               schema:
+                type: array
                 $ref: '#/components/schemas/offer'
-  
+
+  /housings/premium:
+    get:
+      tags:
+        - housings
+      summary: Получение списка премиальных предложений для города.
+
+      parameters:
+        - name: city
+          in: query
+          description: Название города
+          required: true
+          schema:
+            type: string
+            example: Paris
+
+      responses:
+        "200":
+          description: Список премиальных предложений.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/offer"
+
+  /housings/favorites:
+    get:
+      tags:
+        - housings
+      summary: Получения списка предложений, добавленных в избранное.
+
+      responses:
+        "200":
+          description: Список избранных предложений.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/offer"
+
+        "401":
+          description: Пользователь не авторизован.
+
   /housings/register:
     post:
       tags:
@@ -133,6 +198,30 @@ paths:
 
         "400":
           description: Ошибка валидации данных.
+
+  /housings/favorites/{id}:
+    delete:
+      tags:
+        - housings
+      summary: Удаление избранного предложения 
+      description: Удаляет избранное предложение.
+
+      parameters:
+       - name: id
+         description: Идентификатор предложения
+         in: path
+         required: true
+         schema:
+           type: string
+           example: 6329c3d6a04ab1061c6425ea
+
+      responses:
+        "204":
+          description: Нет содержимого
+
+        "404":
+          description: Предложение не найдено.
+
 
 
   /housings/{id}:
@@ -294,22 +383,30 @@ components:
       type: object
 
       properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+          readOnly: true
+
         email:
           type: string
           example: test@gmail.com
 
-        firstname:
+        name:
           type: string
           example: Aleksandr
-
-        lastname:
-          type: string
-          example: Vasilev
 
         password:
           type: string
           format: password
           example: qwerty12345
+
+        userType:
+          type: string
+          enum:
+            - обычный
+            - pro
+          example: Pro
 
     user:
       type: object
@@ -318,10 +415,22 @@ components:
         id:
           type: string
           example: 6329c3d6a04ab1061c6425ea
+          readOnly: true
 
         email:
           type: string
           example: test@gmail.com
+
+        name:
+          type: string
+          example: Aleksandr
+
+        userType:
+          type: string
+          enum:
+            - обычный
+            - pro
+          example: Pro
 
     loginUser: 
       type: object
@@ -360,13 +469,9 @@ components:
           type: string
           example: https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FTerminator_%2528character%2529&psig=AOvVaw3eq3TlAsJ1YTaKGr53lqsK&ust=1707654041605000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJjXnZbhoIQDFQAAAAAdAAAAABAE
         
-        firstname:
+        name:
           type: string
           example: Aleksandr
-
-        lastname:
-          type: string
-          example: Vasilev
 
         userStatus: 
           type: string
@@ -432,9 +537,8 @@ components:
           type: string
           example: Breakfast
 
-        user: 
-          type: string
-          example: 6329c3d6a04ab1061c6425ea
+        author:
+          $ref: "#/components/schemas/user"
 
         reviewsAmount:
           type: integer
@@ -508,9 +612,8 @@ components:
           type: string
           example: Breakfast
 
-        userId: 
-          type: string
-          example: 6329c3d6a04ab1061c6425ea
+        author:
+          $ref: "#/components/schemas/user"
 
         reviewsAmount:
           type: integer
@@ -533,7 +636,5 @@ components:
         rating:
           type: integer
           example: 4
-        userId: 
-          type: string
-          example: 6329c3d6a04ab1061c6425ea
- 
+        author: 
+          $ref: "#/components/schemas/user"
