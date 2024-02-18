@@ -173,6 +173,55 @@ paths:
         "401":
           description: Пользователь не авторизован.
 
+  /housings/{offerId}/favorite:
+    post:
+      tags:
+        - housings
+      summary: Добавление предложения в избранное
+
+      parameters:
+        - name: offerId
+          in: path
+          description: Идентификатор предложения
+          required: true
+          schema:
+            type: string
+            example: 29
+
+      responses:
+        "200":
+          description: Предложение добавлено в избранное
+
+        "401":
+          description: Пользователь не авторизован
+
+        "404":
+          description: Предложение не найдено
+
+    delete:
+      tags:
+        - offers
+      summary: Удаление предложения из избранного
+
+      parameters:
+        - name: offerId
+          in: path
+          description: Идентификатор предложения
+          required: true
+          schema:
+            type: string
+            example: 29
+
+      responses:
+        "204":
+          description: Предложение удалено из избранного
+
+        "401":
+          description: Пользователь не авторизован
+
+        "404":
+          description: Предложение не найдено
+
   /housings/register:
     post:
       tags:
@@ -199,32 +248,7 @@ paths:
         "400":
           description: Ошибка валидации данных.
 
-  /housings/favorites/{id}:
-    delete:
-      tags:
-        - housings
-      summary: Удаление избранного предложения 
-      description: Удаляет избранное предложение.
-
-      parameters:
-       - name: id
-         description: Идентификатор предложения
-         in: path
-         required: true
-         schema:
-           type: string
-           example: 6329c3d6a04ab1061c6425ea
-
-      responses:
-        "204":
-          description: Нет содержимого
-
-        "404":
-          description: Предложение не найдено.
-
-
-
-  /housings/{id}:
+  /housings/{offerId}:
     get:
       tags:
         - housings
@@ -232,7 +256,7 @@ paths:
       description: Получает детальную информацию по предложению.
 
       parameters:
-       - name: id
+       - name: offerId
          description: Идентификатор предложения
          in: path
          required: true
@@ -258,7 +282,7 @@ paths:
       description: Редактирует предложение.
 
       parameters:
-       - name: id
+       - name: offerId
          description: Идентификатор предложения
          in: path
          required: true
@@ -285,6 +309,9 @@ paths:
         "400":
           description: Ошибка валидации данных.
 
+        "401":
+          description: Пользователь не авторизован.
+
         "403":
           description: Нет доступа к данному предложению. Попытка редактирования чужого предложения
 
@@ -298,7 +325,7 @@ paths:
       description: Удаляет предложение.
 
       parameters:
-       - name: id
+       - name: offerId
          description: Идентификатор предложения
          in: path
          required: true
@@ -310,13 +337,16 @@ paths:
         "204":
           description: Нет содержимого
 
+        "401":
+          description: Пользователь не авторизован.
+
         "403":
           description: Нет доступа к данному предложению. Попытка удаления чужого предложения
 
         "404":
           description: Предложение не найдено.
 
-  /housings/{id}/comments:
+  /housings/{offerId}/comments:
     get:
       tags:
         - comments
@@ -324,7 +354,7 @@ paths:
       description: Получает cписок комментариев для предложения.
 
       parameters:
-       - name: id
+       - name: offerId
          description: Идентификатор предложения
          in: path
          required: true
@@ -350,7 +380,7 @@ paths:
       description: Добавляет комментарий для предложения
 
       parameters:
-       - name: id
+       - name: offerId
          description: Идентификатор предложения
          in: path
          required: true
@@ -373,6 +403,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/comment'
+
+        "401":
+          description: Пользователь не авторизован.
 
         "400":
           description: Ошибка валидации данных.
@@ -445,18 +478,6 @@ components:
           format: password
           example: qwerty12345
 
-    userAvatar:
-      type: object
-
-      properties:
-        id:
-          type: string
-          example: 6329c3d6a04ab1061c6425ea
-        
-        avatarPath:
-          type: string
-          example: https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FTerminator_%2528character%2529&psig=AOvVaw3eq3TlAsJ1YTaKGr53lqsK&ust=1707654041605000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJjXnZbhoIQDFQAAAAAdAAAAABAE
-
     userStatus: 
       type: object
 
@@ -489,10 +510,6 @@ components:
           type: string
           example: 5 Stars Hotel in the best area of Paris 
 
-        postDate: 
-          type: string
-          example: '2024-01-09T11:45:12.169Z'
-
         city: 
           type: string
           example: Paris
@@ -509,14 +526,6 @@ components:
           type: boolean
           example: true
 
-        isFavorite: 
-          type: boolean
-          example: true
-
-        rating: 
-          type: integer
-          example: 7
-        
         housingType:
           type: string
           example: Hotel
@@ -536,9 +545,6 @@ components:
         features: 
           type: string
           example: Breakfast
-
-        author:
-          $ref: "#/components/schemas/user"
 
         reviewsAmount:
           type: integer
@@ -627,12 +633,12 @@ components:
       type: object
 
       properties:
+        id:
+          type: string
+          example: 2223
         text: 
           type: string
           example: Amazing hotel! Can't wait to get back!
-        postDate:
-          type: string
-          example: '2024-01-09T11:45:12.169Z'
         rating:
           type: integer
           example: 4

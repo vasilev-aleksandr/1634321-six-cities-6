@@ -1,13 +1,11 @@
 import { inject, injectable } from 'inversify';
 import { DocumentType, types } from '@typegoose/typegoose';
-
 import { Component, SortType } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
-
 import { HousingService } from './housing-service.interface.js';
 import { HousingEntity } from './housing.entity.js';
 import { CreateHousingDto, UpdateHousingDto } from './index.js';
-
+import { MAX_CATEGORIES_COUNT } from './housing.constant.js';
 @injectable()
 export class DefaultHousingService implements HousingService {
   constructor(
@@ -40,17 +38,20 @@ export class DefaultHousingService implements HousingService {
             from: 'comments',
             let: { housingId: '$_id'},
             pipeline: [
-              { $match: { $expr: { $in: ['$$housingId', '$housings'] } } },
-              { $project: { _id: 1}}
+              { $match: { $expr: { $eq: ['$$housingId', '$offerId'] } } },
+              { $group: { _id: null, averageRating: {$avg: '$rating'}, reviewsAmount: { $sum: 1}}}
             ],
             as: 'comments'
           },
         },
         { $addFields:
-          { id: { $toString: '$_id'}, reviewsAmount: { $size: '$comments'} }
+          {
+            reviewsAmount: { $arrayElemAt: ['$comments.reviewsAmount', 0]},
+            averageRating: { $arrayElemAt: ['$comments.averageRating', 0]}
+          },
         },
         { $unset: 'comments' },
-        { $sort: { offerCount: SortType.Down } }
+        { $limit: MAX_CATEGORIES_COUNT },
       ]).exec();
   }
 
@@ -72,7 +73,7 @@ export class DefaultHousingService implements HousingService {
       .exists({_id: id})) !== null;
   }
 
-  public async incCommentCount(id: string): Promise<DocumentType<HousingEntity> | null> {
+  public async incCommentCount(id: string,): Promise<DocumentType<HousingEntity> | null> {
     return this.housingModel
       .findByIdAndUpdate(id, {'$inc': {
         reviewsAmount: 1,
