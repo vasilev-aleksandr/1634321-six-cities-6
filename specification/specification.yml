@@ -1,0 +1,646 @@
+openapi: 3.0.0
+info:
+  title: API сервер для проекта "Шесть городов".
+  description: |-
+    * Список ресурсов и маршрутов сервера "Шесть городов".
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 2.0.0
+tags:
+  - name: housings
+    description: Действия с предложениями об аренде.
+  - name: comments
+    description: Действия с комментариями.
+  - name: users
+    description: Действия с пользователем.
+
+paths:
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Регистрация пользователя
+      description: Регистрирует нового пользователя.
+
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+        required: true
+
+      responses:
+        "201":
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+        "409":
+          description: Пользователь с таким email уже существует.
+        "400":
+          description: Ошибка валидации данных.
+
+
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Авторизация пользователя
+      description: Авторизует пользователя на основе логина и пароля
+
+      requestBody:
+        description: Информация авторизации пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginUser'
+        required: true
+
+      responses:
+        "200":
+          description: Пользователь авторизирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+        "400":
+          description: Пользователь с таким email не существует.
+
+        "403":
+          description: Неверный пароль.
+
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя
+      description: Возвращает информацию по авторизованному пользователю
+
+      responses:
+        "200":
+          description: Состояние пользователя. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userStatus'
+
+        "401":
+          description: Пользователь с таким email не существует.
+
+  /users/logout:
+    post:
+      tags:
+        - users
+      summary: Завершение сессии пользователя
+
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+            example: jhh3232jkjjj23ghjggg23323dffdfj3g232==
+
+      responses:
+        "204":
+          description: Сессия завершена
+
+        "401":
+          description: Пользователь не авторизован
+
+  /housings:
+    get:
+      tags:
+        - housings
+      summary: Список предложений по аренде 
+      description: Получает список предложений по аренде
+
+
+      responses:
+        "200":
+          description: Список предложений по аренде . Объекты предложений.
+          content:
+            application/json:
+              schema:
+                type: array
+                $ref: '#/components/schemas/offer'
+
+  /housings/premium:
+    get:
+      tags:
+        - housings
+      summary: Получение списка премиальных предложений для города.
+
+      parameters:
+        - name: city
+          in: query
+          description: Название города
+          required: true
+          schema:
+            type: string
+            example: Paris
+
+      responses:
+        "200":
+          description: Список премиальных предложений.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/offer"
+
+  /housings/favorites:
+    get:
+      tags:
+        - housings
+      summary: Получения списка предложений, добавленных в избранное.
+
+      responses:
+        "200":
+          description: Список избранных предложений.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/offer"
+
+        "401":
+          description: Пользователь не авторизован.
+
+  /housings/{offerId}/favorite:
+    post:
+      tags:
+        - housings
+      summary: Добавление предложения в избранное
+
+      parameters:
+        - name: offerId
+          in: path
+          description: Идентификатор предложения
+          required: true
+          schema:
+            type: string
+            example: 29
+
+      responses:
+        "200":
+          description: Предложение добавлено в избранное
+
+        "401":
+          description: Пользователь не авторизован
+
+        "404":
+          description: Предложение не найдено
+
+    delete:
+      tags:
+        - offers
+      summary: Удаление предложения из избранного
+
+      parameters:
+        - name: offerId
+          in: path
+          description: Идентификатор предложения
+          required: true
+          schema:
+            type: string
+            example: 29
+
+      responses:
+        "204":
+          description: Предложение удалено из избранного
+
+        "401":
+          description: Пользователь не авторизован
+
+        "404":
+          description: Предложение не найдено
+
+  /housings/register:
+    post:
+      tags:
+        - housings
+      summary: Добавление нового предложения 
+      description: Добавляет новое предложение.
+
+      requestBody:
+        description: Информация для создания нового предложения.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+        required: true
+
+      responses:
+        "201":
+          description: Предложение зарегистрировано. Объект предложения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+
+        "400":
+          description: Ошибка валидации данных.
+
+  /housings/{offerId}:
+    get:
+      tags:
+        - housings
+      summary: Детальная информация по предложению 
+      description: Получает детальную информацию по предложению.
+
+      parameters:
+       - name: offerId
+         description: Идентификатор предложения
+         in: path
+         required: true
+         schema:
+           type: string
+           example: 6329c3d6a04ab1061c6425ea
+
+      responses:
+        "201":
+          description: Детальная информация по предложению . Объект предложения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+
+        "404":
+          description: Предложение не найдено.
+
+    patch:
+      tags:
+        - housings
+      summary: Редактирование предложения 
+      description: Редактирует предложение.
+
+      parameters:
+       - name: offerId
+         description: Идентификатор предложения
+         in: path
+         required: true
+         schema:
+           type: string
+           example: 6329c3d6a04ab1061c6425ea
+
+      requestBody:
+        description: Информация для редактирования предложения.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+        required: true
+
+      responses:
+        "200":
+          description: Предложение отредактировано. Объект предложения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+
+        "400":
+          description: Ошибка валидации данных.
+
+        "401":
+          description: Пользователь не авторизован.
+
+        "403":
+          description: Нет доступа к данному предложению. Попытка редактирования чужого предложения
+
+        "404":
+          description: Предложение не найдено.
+
+    delete:
+      tags:
+        - housings
+      summary: Удаление предложения 
+      description: Удаляет предложение.
+
+      parameters:
+       - name: offerId
+         description: Идентификатор предложения
+         in: path
+         required: true
+         schema:
+           type: string
+           example: 6329c3d6a04ab1061c6425ea
+
+      responses:
+        "204":
+          description: Нет содержимого
+
+        "401":
+          description: Пользователь не авторизован.
+
+        "403":
+          description: Нет доступа к данному предложению. Попытка удаления чужого предложения
+
+        "404":
+          description: Предложение не найдено.
+
+  /housings/{offerId}/comments:
+    get:
+      tags:
+        - comments
+      summary: Список комментариев для предложения
+      description: Получает cписок комментариев для предложения.
+
+      parameters:
+       - name: offerId
+         description: Идентификатор предложения
+         in: path
+         required: true
+         schema:
+           type: string
+           example: 6329c3d6a04ab1061c6425ea
+
+      responses:
+        "200":
+          description: Список комментариев для предложения . Объекты комментариев.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+
+        "404":
+          description: Предложение не найдено.
+
+    post: 
+      tags:
+        - comments
+      summary: Добавление комментария
+      description: Добавляет комментарий для предложения
+
+      parameters:
+       - name: offerId
+         description: Идентификатор предложения
+         in: path
+         required: true
+         schema:
+           type: string
+           example: 6329c3d6a04ab1061c6425ea
+      
+      requestBody:
+        description: Информация для добавления комментария.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/comment'
+        required: true
+
+      responses:
+        "200":
+          description: Комментарий добавлен. Объект комментария.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+
+        "401":
+          description: Пользователь не авторизован.
+
+        "400":
+          description: Ошибка валидации данных.
+
+components:
+  schemas:
+    createUser:
+      type: object
+
+      properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+          readOnly: true
+
+        email:
+          type: string
+          example: test@gmail.com
+
+        name:
+          type: string
+          example: Aleksandr
+
+        password:
+          type: string
+          format: password
+          example: qwerty12345
+
+        userType:
+          type: string
+          enum:
+            - обычный
+            - pro
+          example: Pro
+
+    user:
+      type: object
+
+      properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+          readOnly: true
+
+        email:
+          type: string
+          example: test@gmail.com
+
+        name:
+          type: string
+          example: Aleksandr
+
+        userType:
+          type: string
+          enum:
+            - обычный
+            - pro
+          example: Pro
+
+    loginUser: 
+      type: object
+
+      properties:
+        email:
+          type: string
+          example: test@gmail.com
+
+        password:
+          type: string
+          format: password
+          example: qwerty12345
+
+    userStatus: 
+      type: object
+
+      properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+        
+        avatarPath:
+          type: string
+          example: https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FTerminator_%2528character%2529&psig=AOvVaw3eq3TlAsJ1YTaKGr53lqsK&ust=1707654041605000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJjXnZbhoIQDFQAAAAAdAAAAABAE
+        
+        name:
+          type: string
+          example: Aleksandr
+
+        userStatus: 
+          type: string
+          example: pro
+    
+    createOffer:
+      type: object
+
+      properties: 
+        title:
+          type: string
+          example: Hilton Hotel  
+        
+        description: 
+          type: string
+          example: 5 Stars Hotel in the best area of Paris 
+
+        city: 
+          type: string
+          example: Paris
+        
+        preview: 
+          type: string
+          example: https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FTerminator_%2528character%2529&psig=AOvVaw3eq3TlAsJ1YTaKGr53lqsK&ust=1707654041605000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJjXnZbhoIQDFQAAAAAdAAAAABAE
+        
+        images: 
+          type: string
+          example: https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FTerminator_%2528character%2529&psig=AOvVaw3eq3TlAsJ1YTaKGr53lqsK&ust=1707654041605000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJjXnZbhoIQDFQAAAAAdAAAAABAE
+
+        isPremium: 
+          type: boolean
+          example: true
+
+        housingType:
+          type: string
+          example: Hotel
+
+        rooms:
+          type: integer
+          example: 2
+        
+        guests:
+          type: integer
+          example: 4
+        
+        price:
+          type: integer
+          example: 5000
+
+        features: 
+          type: string
+          example: Breakfast
+
+        reviewsAmount:
+          type: integer
+          example: 4
+
+        location: 
+          type: string
+          example: '48.85661 2.351499'
+
+    offer:
+      type: object
+
+      properties: 
+        id: 
+          type: string
+          example: 1fhhfh19299292jjgfl12
+
+        title:
+          type: string
+          example: Hilton Hotel  
+        
+        description: 
+          type: string
+          example: 5 Stars Hotel in the best area of Paris 
+
+        postDate: 
+          type: string
+          example: '2024-01-09T11:45:12.169Z'
+
+        city: 
+          type: string
+          example: Paris
+        
+        preview: 
+          type: string
+          example: https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FTerminator_%2528character%2529&psig=AOvVaw3eq3TlAsJ1YTaKGr53lqsK&ust=1707654041605000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJjXnZbhoIQDFQAAAAAdAAAAABAE
+        
+        images: 
+          type: string
+          example: https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FTerminator_%2528character%2529&psig=AOvVaw3eq3TlAsJ1YTaKGr53lqsK&ust=1707654041605000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCJjXnZbhoIQDFQAAAAAdAAAAABAE
+
+        isPremium: 
+          type: boolean
+          example: true
+
+        isFavorite: 
+          type: boolean
+          example: true
+
+        rating: 
+          type: integer
+          example: 7
+        
+        housingType:
+          type: string
+          example: Hotel
+
+        rooms:
+          type: integer
+          example: 2
+        
+        guests:
+          type: integer
+          example: 4
+        
+        price:
+          type: integer
+          example: 5000
+
+        features: 
+          type: string
+          example: Breakfast
+
+        author:
+          $ref: "#/components/schemas/user"
+
+        reviewsAmount:
+          type: integer
+          example: 4
+
+        location: 
+          type: string
+          example: '48.85661 2.351499'
+
+    comment:
+      type: object
+
+      properties:
+        id:
+          type: string
+          example: 2223
+        text: 
+          type: string
+          example: Amazing hotel! Can't wait to get back!
+        rating:
+          type: integer
+          example: 4
+        author: 
+          $ref: "#/components/schemas/user"
