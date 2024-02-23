@@ -2,7 +2,7 @@ import {
   HousingType,
   HousingFeature,
   HousingLocation,
-  User,
+  City,
 } from '../../../types/index.js';
 
 export class CreateHousingDto {
@@ -10,7 +10,7 @@ export class CreateHousingDto {
   public title: string;
   public description: string;
   public postDate: Date;
-  public city: string;
+  public city: City;
   public preview: string;
   public images: string[];
   public isPremium: boolean;
@@ -21,7 +21,6 @@ export class CreateHousingDto {
   public guests: number;
   public price: number;
   public features: HousingFeature[];
-  public user: User;
   public reviewsAmount: number;
   public location: HousingLocation;
 }

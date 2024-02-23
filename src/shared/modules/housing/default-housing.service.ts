@@ -1,11 +1,11 @@
 import { inject, injectable } from 'inversify';
 import { DocumentType, types } from '@typegoose/typegoose';
-import { Component, SortType } from '../../types/index.js';
+import { Component, SortType, City } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { HousingService } from './housing-service.interface.js';
 import { HousingEntity } from './housing.entity.js';
 import { CreateHousingDto, UpdateHousingDto } from './index.js';
-import { MAX_CATEGORIES_COUNT } from './housing.constant.js';
+import { MAX_OFFERS_COUNT, PREMIUM_OFFERS_COUNT } from './housing.constant.js';
 @injectable()
 export class DefaultHousingService implements HousingService {
   constructor(
@@ -24,9 +24,9 @@ export class DefaultHousingService implements HousingService {
   public async findById(
     offerId: string
   ): Promise<DocumentType<HousingEntity> | null> {
+
     return this.housingModel
       .findById(offerId)
-      .populate(['userId'])
       .exec();
   }
 
@@ -51,7 +51,7 @@ export class DefaultHousingService implements HousingService {
           },
         },
         { $unset: 'comments' },
-        { $limit: MAX_CATEGORIES_COUNT },
+        { $limit: MAX_OFFERS_COUNT },
       ]).exec();
   }
 
@@ -64,7 +64,6 @@ export class DefaultHousingService implements HousingService {
   public async updateById(id: string, dto: UpdateHousingDto): Promise<DocumentType<HousingEntity> | null> {
     return this.housingModel
       .findByIdAndUpdate(id, dto, {new: true})
-      .populate(['userId'])
       .exec();
   }
 
@@ -80,21 +79,21 @@ export class DefaultHousingService implements HousingService {
       }}).exec();
   }
 
-  public async findNew(count: number): Promise<DocumentType<HousingEntity>[]> {
-    return this.housingModel
-      .find()
-      .sort({ createdAt: SortType.Down })
-      .limit(count)
-      .populate(['userId'])
-      .exec();
+  public async findPremiumByCity(city: string): Promise<types.DocumentType<HousingEntity>[]> {
+    return await this.housingModel
+      .aggregate([
+        { $match: { city, isPremium: true } },
+        { $sort: { createdAt: SortType.Down } },
+        { $limit: PREMIUM_OFFERS_COUNT },
+      ]).exec();
   }
 
-  public async findDiscussed(count: number): Promise<DocumentType<HousingEntity>[]> {
+  public async findFavorite(): Promise<DocumentType<HousingEntity>[]> {
     return this.housingModel
-      .find()
-      .sort({ reviewsAmount: SortType.Down })
-      .limit(count)
-      .populate(['userId'])
+      .aggregate([
+        { $match: { isFavorite: true } },
+        { $sort: { createdAt: SortType.Down } },
+      ])
       .exec();
   }
 }

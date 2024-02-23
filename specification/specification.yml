@@ -128,6 +128,31 @@ paths:
               schema:
                 type: array
                 $ref: '#/components/schemas/offer'
+    post:
+      tags:
+        - housings
+      summary: Добавление нового предложения 
+      description: Добавляет новое предложение.
+
+      requestBody:
+        description: Информация для создания нового предложения.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+        required: true
+
+      responses:
+        "201":
+          description: Предложение зарегистрировано. Объект предложения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+
+        "400":
+          description: Ошибка валидации данных.
+
 
   /housings/premium:
     get:
@@ -221,32 +246,6 @@ paths:
 
         "404":
           description: Предложение не найдено
-
-  /housings/register:
-    post:
-      tags:
-        - housings
-      summary: Добавление нового предложения 
-      description: Добавляет новое предложение.
-
-      requestBody:
-        description: Информация для создания нового предложения.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/createOffer'
-        required: true
-
-      responses:
-        "201":
-          description: Предложение зарегистрировано. Объект предложения.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/offer'
-
-        "400":
-          description: Ошибка валидации данных.
 
   /housings/{offerId}:
     get:
