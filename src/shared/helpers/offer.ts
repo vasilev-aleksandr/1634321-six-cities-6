@@ -7,8 +7,8 @@ import {
   UserStatus,
 } from '../types/index.js';
 
-function parseUser(user: string): User {
-  const [name, email, avatarPath, password, status] = user.split(';');
+function parseUser(authorId: string): User {
+  const [name, email, avatarPath, password, status] = authorId.split(';');
 
   return {
     name,
@@ -44,7 +44,7 @@ export function createOffer(offerData: string): Housing {
     guests,
     price,
     features,
-    user,
+    authorId,
     reviewsAmount,
     location
   ] = offerData.replace('\n', '').split('\t');
@@ -65,7 +65,7 @@ export function createOffer(offerData: string): Housing {
     guests: Number(guests),
     price: Number(price),
     features: features.split(',') as HousingFeature[],
-    user: parseUser(user),
+    authorId: parseUser(authorId),
     reviewsAmount: Number(reviewsAmount),
     location: parseLocation(location)
   };

@@ -36,7 +36,7 @@ export type Housing = {
   guests: number;
   price: number;
   features: HousingFeature[];
-  user: User;
+  authorId: User;
   reviewsAmount: number;
   location: HousingLocation;
 }
