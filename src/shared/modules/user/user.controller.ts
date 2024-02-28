@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { BaseController, HttpError, HttpMethod } from '../../libs/rest/index.js';
+import { BaseController, HttpError, HttpMethod, ValidateDtoMiddleware } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js';
 import { CreateUserRequest } from './create-user-request.type.js';
@@ -11,6 +11,8 @@ import { fillDTO } from '../../helpers/index.js';
 import { UserRdo } from './rdo/user.rdo.js';
 import { LoginUserRequest } from './login-user-request.type.js';
 import { IsFavoriteRequest } from './is-favorite.type.js';
+import { CreateUserDto, LoginUserDto } from './dto/index.js';
+
 
 @injectable()
 export class UserController extends BaseController {
@@ -22,10 +24,28 @@ export class UserController extends BaseController {
     super(logger);
     this.logger.info('Register routes for UserController…');
 
-    this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create });
-    this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
-    this.addRoute({ path: '/favorites', method: HttpMethod.Post, handler: this.addFavorite });
-    this.addRoute({ path: '/favorites', method: HttpMethod.Delete, handler: this.removeFavorite });
+    this.addRoute({
+      path: '/register',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateUserDto)]
+    });
+    this.addRoute({
+      path: '/login',
+      method: HttpMethod.Post,
+      handler: this.login,
+      middlewares: [new ValidateDtoMiddleware(LoginUserDto)]
+    });
+    this.addRoute({
+      path: '/favorites',
+      method: HttpMethod.Post,
+      handler: this.addFavorite,
+    });
+    this.addRoute({
+      path: '/favorites',
+      method: HttpMethod.Delete,
+      handler: this.removeFavorite,
+    });
   }
 
   public async create(

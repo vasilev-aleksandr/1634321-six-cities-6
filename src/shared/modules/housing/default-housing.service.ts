@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { DocumentType, types } from '@typegoose/typegoose';
-import { Component, SortType, City } from '../../types/index.js';
+import { Component, SortType } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { HousingService } from './housing-service.interface.js';
 import { HousingEntity } from './housing.entity.js';
@@ -25,9 +25,8 @@ export class DefaultHousingService implements HousingService {
     offerId: string
   ): Promise<DocumentType<HousingEntity> | null> {
 
-    return this.housingModel
-      .findById(offerId)
-      .exec();
+    return await this.housingModel.findById(offerId).populate('authorId').exec();
+
   }
 
   public async find(): Promise<DocumentType<HousingEntity>[]> {
@@ -95,5 +94,9 @@ export class DefaultHousingService implements HousingService {
         { $sort: { createdAt: SortType.Down } },
       ])
       .exec();
+  }
+
+  public async updateByIdOnNewComment(id: string, newRating: number): Promise<types.DocumentType<HousingEntity> | null> {
+    return await this.housingModel.findByIdAndUpdate(id, { $inc: { reviewsAmount: 1 }, rating: newRating }, { new: true }).exec();
   }
 }
