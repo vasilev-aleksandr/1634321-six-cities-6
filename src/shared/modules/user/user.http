@@ -25,3 +25,17 @@ Content-Type: application/json
 }
 
 ###
+
+## Отправить изображение
+
+POST http://localhost:8080/users/65bffd191c02bb6ef28df3ab/avatar HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="avatar"; filename="screen.png"
+Content-Type: image/png
+
+< /Users/aleksandrvasilev/Desktop/2024-02-26 20.53.10.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+##

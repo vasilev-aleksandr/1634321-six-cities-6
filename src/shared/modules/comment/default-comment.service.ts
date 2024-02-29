@@ -20,16 +20,12 @@ export class DefaultCommentService implements CommentService {
 
     this.logger.info(`Comment with id ${comment.id} was created`);
 
-    console.log(comment);
-
     const commentWithAuthor = await this.commentModel.aggregate([
       { $match: { _id: comment._id } },
       { $lookup: { from: 'users', localField: 'authorId', foreignField: '_id', as: 'author' } },
       { $unwind: '$author' },
       { $limit: 1 },
     ]).exec();
-
-    console.log(commentWithAuthor);
 
     return commentWithAuthor[0];
   }
@@ -44,8 +40,6 @@ export class DefaultCommentService implements CommentService {
       .limit(COMMENTS_AMOUNT_LIMIT)
       .sort({ createdAt: SortType.Down })
       .exec();
-
-    console.log(offerId);
 
     this.logger.info(`Number of comments for offer ${offerId}: ${result.length}`);
     return result;
