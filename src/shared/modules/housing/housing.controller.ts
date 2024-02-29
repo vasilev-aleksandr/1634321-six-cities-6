@@ -1,13 +1,13 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { BaseController, HttpMethod, HttpError } from '../../libs/rest/index.js';
+import { BaseController, HttpError, HttpMethod, ValidateObjectIdMiddleware, ValidateDtoMiddleware, DocumentExistsMiddleware,} from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { City,Component } from '../../types/index.js';
 import { HousingService } from './housing-service.interface.js';
 import { fillDTO } from '../../helpers/index.js';
 import { HousingRdo, DetailedHousingRdo } from './rdo/index.js';
-import { CreateHousingDto } from './dto/create-housing.dto.js';
+import { CreateHousingDto, UpdateHousingDto } from './dto/index.js';
 import { GetHousingRequestType } from './types/get-detailed-housing.type.js';
 
 @injectable()
@@ -30,21 +30,7 @@ export class HousingController extends BaseController {
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
-    });
-    this.addRoute({
-      path: '/:offerId',
-      method: HttpMethod.Get,
-      handler: this.getDetailedHousing,
-    });
-    this.addRoute({
-      path: '/:offerId',
-      method: HttpMethod.Delete,
-      handler: this.delete,
-    });
-    this.addRoute({
-      path: '/:offerId',
-      method: HttpMethod.Patch,
-      handler: this.update,
+      middlewares: [new ValidateDtoMiddleware(CreateHousingDto)]
     });
     this.addRoute({
       path: '/premium',
@@ -55,6 +41,34 @@ export class HousingController extends BaseController {
       path: '/favorites',
       method: HttpMethod.Get,
       handler: this.getFavorites,
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Get,
+      handler: this.getDetailedHousing,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.housingService, 'Offer', 'offerId'),
+      ],
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Delete,
+      handler: this.delete,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.housingService, 'Offer', 'offerId'),
+      ],
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Patch,
+      handler: this.update,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new ValidateDtoMiddleware(UpdateHousingDto),
+        new DocumentExistsMiddleware(this.housingService, 'Offer', 'offerId'),
+      ],
     });
   }
 
@@ -70,7 +84,9 @@ export class HousingController extends BaseController {
   ): Promise<void> {
 
     const result = await this.housingService.create(body);
-    this.created(res, fillDTO(HousingRdo, result));
+    const offer = await this.housingService.findById(result.id);
+
+    this.created(res, fillDTO(HousingRdo, offer));
   }
 
   public async getDetailedHousing(req: GetHousingRequestType, res: Response) {
@@ -122,9 +138,9 @@ export class HousingController extends BaseController {
   public async getPremium(req: GetHousingRequestType, res: Response){
     const { query: { city } } = req;
 
-    if(typeof city === 'string' && Object.keys(City).includes(city)) {
+    if(typeof city === 'string' && Object.keys(City).includes(city[0].toUpperCase() + city.slice(1))) {
       const result = await this.housingService.findPremiumByCity(
-        City[city as keyof typeof City]);
+        City[city[0].toUpperCase() + city.slice(1) as keyof typeof City]);
 
       return this.ok(res, fillDTO(HousingRdo, result));
     }
