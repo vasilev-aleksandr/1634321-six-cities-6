@@ -1,4 +1,4 @@
-import { IsArray, IsEnum, IsInt, IsMongoId, Max, MaxLength, Min, MinLength, IsBoolean, IsObject, ValidateNested } from 'class-validator';
+import { IsArray, IsEnum, IsInt, Max, MaxLength, Min, MinLength, IsBoolean, IsObject } from 'class-validator';
 import { UpdateHousingValidationMessage } from './update-housing.message.js';
 import { HousingType, HousingFeature, HousingLocation, City } from '../../../types/index.js';
 
