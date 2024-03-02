@@ -5,8 +5,8 @@ POST http://localhost:8080/users/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "Leo",
-  "email": "test7@gmail.com",
+  "name": "Josh",
+  "email": "test9@gmail.com",
   "avatarPath": "alloha.jpg",
   "password": "blablabla123",
   "userStatus": "regular"
@@ -20,8 +20,8 @@ POST http://localhost:8080/users/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "test2@gmail.com",
-  "password": "poop"
+  "email": "test9@gmail.com",
+  "password": "blablabla123"
 }
 
 ###
@@ -52,8 +52,21 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3QyQGdtYWlsLmNvbSIsI
 
 POST http://localhost:8080/users/favorites HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3QyQGdtYWlsLmNvbSIsIm5hbWUiOiJLaW0iLCJpZCI6IjY1ZDI0ZjBjNTRmZWY2ZGI1M2Q1OTZhNSIsImlhdCI6MTcwOTQwMzIzNCwiZXhwIjoxNzA5NTc2MDM0fQ.Z8D_dzmB527UX6r8r3vzScOD0o3NKa_qElgXc2WBZl0
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3Q5QGdtYWlsLmNvbSIsIm5hbWUiOiJKb3NoIiwiaWQiOiI2NWUzYWNkMzdiYzVhY2ZjZWVmNWRmOGUiLCJpYXQiOjE3MDk0MjA0MDIsImV4cCI6MTcwOTU5MzIwMn0.Lrr3B23XugHqlTOZ1yTY9-02Y8e2mp1hcVwr_lrDxMk
 
 {
-  "offerId": "65e37077ccfca4b5583f0230"
+  "offerId": "65e3b32abaf215aa1dd57ce3"
+}
+
+##
+###
+
+## Удаление предложения из избранного пользователя
+
+DELETE http://localhost:8080/users/favorites HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3Q3QGdtYWlsLmNvbSIsIm5hbWUiOiJMZW8iLCJpZCI6IjY1ZTM5ZWM3MTdiYmRhNTk4OGQ3MTJkMSIsImlhdCI6MTcwOTQxNjE0NCwiZXhwIjoxNzA5NTg4OTQ0fQ.fEGmGoU0Izfwe0_VC2t7Lqh_FP1kQIIUpX7GZk9AaPc
+
+{
+  "offerId": "65e39eee17bbda5988d712d4"
 }

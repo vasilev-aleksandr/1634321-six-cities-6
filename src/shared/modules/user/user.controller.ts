@@ -66,16 +66,16 @@ export class UserController extends BaseController {
     });
     this.addRoute({
       path: '/favorites',
-      method: HttpMethod.Post,
-      handler: this.addFavorite,
+      method: HttpMethod.Delete,
+      handler: this.removeFavorite,
       middlewares: [
         new PrivateRouteMiddleware(),
       ]
     });
     this.addRoute({
       path: '/favorites',
-      method: HttpMethod.Delete,
-      handler: this.removeFavorite,
+      method: HttpMethod.Post,
+      handler: this.addFavorite,
       middlewares: [
         new PrivateRouteMiddleware(),
       ]

@@ -12,7 +12,7 @@ export class DefaultHousingService implements HousingService {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
     @inject(Component.HousingModel)
-    private readonly housingModel: types.ModelType<HousingEntity>
+    private readonly housingModel: types.ModelType<HousingEntity>,
   ) {}
 
   public async create(dto: CreateHousingDto): Promise<DocumentType<HousingEntity>> {
@@ -22,13 +22,8 @@ export class DefaultHousingService implements HousingService {
     return result;
   }
 
-  public async findById(
-    offerId: string,
-    userId: string,
-  ): Promise<DocumentType<HousingEntity> | null> {
-
-    return await this.housingModel.findById(offerId).populate(userId).exec();
-
+  public async findById(id: string): Promise<types.DocumentType<HousingEntity> | null> {
+    return await this.housingModel.findById(id).populate('authorId').exec();
   }
 
   public async find(): Promise<DocumentType<HousingEntity>[]> {
@@ -92,21 +87,23 @@ export class DefaultHousingService implements HousingService {
   public async findFavorite(userId: string): Promise<DocumentType<HousingEntity>[]> {
     return this.housingModel
       .aggregate([
+        { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'users' } },
+        { $addFields: { user: { $arrayElemAt: [ '$users', 0 ] } } },
         { $lookup:
-          {
-            from: 'users',
-            let: { userId: new Types.ObjectId(userId) },
-            pipeline: [
-              { $match: { $expr: { $eq: ['$_id', '$$userId'] } } }
-            ],
-            as: 'specificUser'
-          }
+  {
+    from: 'users',
+    let: { userId: new Types.ObjectId(userId) },
+    pipeline: [
+      { $match: { $expr: { $eq: ['$_id', '$$userId'] } } }
+    ],
+    as: 'specificUser'
+  }
         },
         { $addFields: { specificUser: { $arrayElemAt: [ '$specificUser', 0 ] } } },
         { $addFields: { 'specificUser.favorites': { $ifNull: [ '$specificUser.favorites', [] ] } } },
         { $addFields: { isFavorite: { $in: [ '$_id', '$specificUser.favorites' ] } } },
-        { $sort: { createdAt: SortType.Down } },
-        { $unset: 'specificUser' },
+        { $unset: ['users', 'specificUser'] },
+        { $match: { isFavorite: true } },
       ])
       .exec();
   }

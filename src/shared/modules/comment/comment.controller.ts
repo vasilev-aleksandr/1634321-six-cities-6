@@ -60,8 +60,6 @@ export default class CommentController extends BaseController {
       );
     }
 
-    console.log(tokenPayload);
-
     const comment = await this.commentService.create({ ...body, authorId: tokenPayload.id });
 
     const newRating = await this.commentService.getUpdatedAverageRating(body.offerId);
