@@ -1,4 +1,4 @@
-import { IsArray, IsDateString, IsEnum, IsInt, IsMongoId, Max, MaxLength, Min, MinLength, IsBoolean, IsObject, ValidateNested } from 'class-validator';
+import { IsArray, IsDateString, IsEnum, IsInt, Max, MaxLength, Min, MinLength, IsBoolean, IsObject, ValidateNested } from 'class-validator';
 import { CreateHousingValidationMessage } from './create-housing.messages.js';
 import {
   HousingType,
@@ -8,7 +8,6 @@ import {
 } from '../../../types/index.js';
 
 export class CreateHousingDto {
-  @IsMongoId({ message: CreateHousingValidationMessage.authorId.invalidId })
   public authorId: string;
 
   @MinLength(10, { message: CreateHousingValidationMessage.title.minLength })
@@ -49,8 +48,8 @@ export class CreateHousingDto {
   public guests: number;
 
   @IsInt({ message: CreateHousingValidationMessage.price.invalidFormat })
-  @Min(1, { message: CreateHousingValidationMessage.price.minValue })
-  @Max(10, { message: CreateHousingValidationMessage.price.maxValue })
+  @Min(100, { message: CreateHousingValidationMessage.price.minValue })
+  @Max(100000, { message: CreateHousingValidationMessage.price.maxValue })
   public price: number;
 
   @IsArray({ message: CreateHousingValidationMessage.features.invalidFormat })

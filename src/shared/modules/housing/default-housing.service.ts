@@ -1,5 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { DocumentType, types } from '@typegoose/typegoose';
+import { Types } from 'mongoose';
 import { Component, SortType } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { HousingService } from './housing-service.interface.js';
@@ -22,10 +23,11 @@ export class DefaultHousingService implements HousingService {
   }
 
   public async findById(
-    offerId: string
+    offerId: string,
+    userId: string,
   ): Promise<DocumentType<HousingEntity> | null> {
 
-    return await this.housingModel.findById(offerId).populate('authorId').exec();
+    return await this.housingModel.findById(offerId).populate(userId).exec();
 
   }
 
@@ -87,11 +89,24 @@ export class DefaultHousingService implements HousingService {
       ]).exec();
   }
 
-  public async findFavorite(): Promise<DocumentType<HousingEntity>[]> {
+  public async findFavorite(userId: string): Promise<DocumentType<HousingEntity>[]> {
     return this.housingModel
       .aggregate([
-        { $match: { isFavorite: true } },
+        { $lookup:
+          {
+            from: 'users',
+            let: { userId: new Types.ObjectId(userId) },
+            pipeline: [
+              { $match: { $expr: { $eq: ['$_id', '$$userId'] } } }
+            ],
+            as: 'specificUser'
+          }
+        },
+        { $addFields: { specificUser: { $arrayElemAt: [ '$specificUser', 0 ] } } },
+        { $addFields: { 'specificUser.favorites': { $ifNull: [ '$specificUser.favorites', [] ] } } },
+        { $addFields: { isFavorite: { $in: [ '$_id', '$specificUser.favorites' ] } } },
         { $sort: { createdAt: SortType.Down } },
+        { $unset: 'specificUser' },
       ])
       .exec();
   }

@@ -8,14 +8,15 @@ Content-Type: application/json
 ## Добавить новое объявление
 POST http://localhost:8080/housings HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3QyQGdtYWlsLmNvbSIsIm5hbWUiOiJLaW0iLCJpZCI6IjY1ZDI0ZjBjNTRmZWY2ZGI1M2Q1OTZhNSIsImlhdCI6MTcwOTQwMzIzNCwiZXhwIjoxNzA5NTc2MDM0fQ.Z8D_dzmB527UX6r8r3vzScOD0o3NKa_qElgXc2WBZl0
 
 {
   "authorId": "65d2647d39eecdd3d5ea5ff4",
-  "postDate": "2024-02-18T12:15:45.279Z",
-  "title": "Your Paris Nightmare",
-  "description": "You don't want to know how bad it is",
+  "postDate": "2024-03-01T12:15:45.279Z",
+  "title": "Your Paris Dream",
+  "description": "It's the house of my dream!",
   "city": "Paris",
-  "preview": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.dezeen.com%2F2011%2F10%2F26%2Fmaison-champs-elysees-by-maison-martin-margiela%2F&psig=AOvVaw0E2ds7EEMpRikolJzpYQgp&ust=1708358480650000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCPDO0rihtYQDFQAAAAAdAAAAABAI",
+  "preview": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.dezeen.com%2F2011%2F10%2F26%2Fmaison-champs-elysees-by-maisonVaw0E2dsoTCPDO0rihtYQDFQAAAAAdAAAAABAI",
   "images": ["https://wwww.booking.com/test_photo1", "https://wwww.booking.com/test_photo2", "https://wwww.booking.com/test_photo3", "https://wwww.booking.com/test_photo4", "https://wwww.booking.com/test_photo5"],
   "housingType": "hotel",
   "rooms": 4,
@@ -25,14 +26,17 @@ Content-Type: application/json
   "isFavorite": false,
   "rating": 1,
   "features": ["Washer", "Towels"],
-  "location": "48.85661 2.351499"
+  "location": {
+    "latitude": 48.85661,
+    "longitude": 2.351499
+    }
 }
 
 ###
 
 # Категории
 ## Получить объявление по id
-GET http://localhost:8080/housings/65de60e5fb6972638a HTTP/1.1
+GET http://localhost:8080/housings/65e37077ccfca4b5583f0230 HTTP/1.1
 Content-Type: application/json
 
 ###
@@ -43,4 +47,14 @@ GET http://localhost:8080/housings/premium?city=amsterdam HTTP/1.1
 Content-Type: application/json
 
 ###
+
+# Категории
+## Получить список избранных объявлений
+GET http://localhost:8080/housings/favorites HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3QyQGdtYWlsLmNvbSIsIm5hbWUiOiJLaW0iLCJpZCI6IjY1ZDI0ZjBjNTRmZWY2ZGI1M2Q1OTZhNSIsImlhdCI6MTcwOTM5NzU2OSwiZXhwIjoxNzA5NTcwMzY5fQ.-A398VanuAsTMxl1sG2pj5Q6pRhUUbCPzDB6NgPyFJE
+###
+
+
+
 

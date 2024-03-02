@@ -1,7 +1,4 @@
 export const CreateHousingValidationMessage = {
-  authorId: {
-    invalidId: 'authorId field must be a valid id',
-  },
   title: {
     minLength: 'Minimum title length must be 10',
     maxLength: 'Maximum title length must be 100',

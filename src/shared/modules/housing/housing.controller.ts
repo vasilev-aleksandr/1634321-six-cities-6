@@ -1,7 +1,15 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { BaseController, HttpError, HttpMethod, ValidateObjectIdMiddleware, ValidateDtoMiddleware, DocumentExistsMiddleware,} from '../../libs/rest/index.js';
+import {
+  BaseController,
+  HttpError,
+  HttpMethod,
+  ValidateObjectIdMiddleware,
+  ValidateDtoMiddleware,
+  DocumentExistsMiddleware,
+  PrivateRouteMiddleware,
+} from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { City,Component } from '../../types/index.js';
 import { HousingService } from './housing-service.interface.js';
@@ -9,6 +17,7 @@ import { fillDTO } from '../../helpers/index.js';
 import { HousingRdo, DetailedHousingRdo } from './rdo/index.js';
 import { CreateHousingDto, UpdateHousingDto } from './dto/index.js';
 import { GetHousingRequestType } from './types/get-detailed-housing.type.js';
+import { CreateHousingRequestType } from './types/create-housing-request.type.js';
 
 @injectable()
 export class HousingController extends BaseController {
@@ -30,7 +39,10 @@ export class HousingController extends BaseController {
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleware(CreateHousingDto)]
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateDtoMiddleware(CreateHousingDto),
+      ]
     });
     this.addRoute({
       path: '/premium',
@@ -41,6 +53,9 @@ export class HousingController extends BaseController {
       path: '/favorites',
       method: HttpMethod.Get,
       handler: this.getFavorites,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+      ]
     });
     this.addRoute({
       path: '/:offerId',
@@ -56,6 +71,7 @@ export class HousingController extends BaseController {
       method: HttpMethod.Delete,
       handler: this.delete,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.housingService, 'Offer', 'offerId'),
       ],
@@ -65,6 +81,7 @@ export class HousingController extends BaseController {
       method: HttpMethod.Patch,
       handler: this.update,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new ValidateDtoMiddleware(UpdateHousingDto),
         new DocumentExistsMiddleware(this.housingService, 'Offer', 'offerId'),
@@ -78,20 +95,15 @@ export class HousingController extends BaseController {
     this.ok(res, responseData);
   }
 
-  public async create(
-    { body }: Request<Record<string, unknown>, Record<string, unknown>, CreateHousingDto>,
-    res: Response
-  ): Promise<void> {
+  public async create({ body, tokenPayload }: CreateHousingRequestType, res: Response): Promise<void> {
+    const result = await this.housingService.create({ ...body, authorId: tokenPayload.id });
 
-    const result = await this.housingService.create(body);
-    const offer = await this.housingService.findById(result.id);
-
-    this.created(res, fillDTO(HousingRdo, offer));
+    this.created(res, fillDTO(HousingRdo, result));
   }
 
   public async getDetailedHousing(req: GetHousingRequestType, res: Response) {
-    const { params: { offerId }} = req;
-    const offer = await this.housingService.findById(offerId);
+    const { params: { offerId }, tokenPayload } = req;
+    const offer = await this.housingService.findById(offerId, tokenPayload?.id);
     if (offer) {
       return this.ok(res, fillDTO(DetailedHousingRdo, offer));
     }
@@ -152,8 +164,8 @@ export class HousingController extends BaseController {
     );
   }
 
-  public async getFavorites(_req: GetHousingRequestType, res: Response){
-    const result = await this.housingService.findFavorite();
-    return this.ok(res, fillDTO(HousingRdo, result));
+  public async getFavorites({ tokenPayload }: Request, res: Response) {
+    const result = await this.housingService.findFavorite(tokenPayload.id);
+    return this.ok(res, fillDTO(DetailedHousingRdo, result));
   }
 }

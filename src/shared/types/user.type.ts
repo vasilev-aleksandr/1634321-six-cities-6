@@ -1,4 +1,7 @@
-export type UserStatus = 'regular' | 'pro';
+export enum UserStatus {
+    Regular = 'regular',
+    Pro = 'pro',
+  }
 
 export type User = {
     name: string,
