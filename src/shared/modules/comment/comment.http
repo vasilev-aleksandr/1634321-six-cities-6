@@ -3,16 +3,16 @@
 
 POST http://localhost:8080/comments HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3QyQGdtYWlsLmNvbSIsIm5hbWUiOiJLaW0iLCJpZCI6IjY1ZDI0ZjBjNTRmZWY2ZGI1M2Q1OTZhNSIsImlhdCI6MTcwOTM5NzU2OSwiZXhwIjoxNzA5NTcwMzY5fQ.-A398VanuAsTMxl1sG2pj5Q6pRhUUbCPzDB6NgPyFJE
 
 {
-  "text": "hoorible place!!!",
-  "offerId": "65d317efa4b315bc2103b82f",
-  "authorId": "65d2647d39eecdd3d5ea5ff4",
-  "rating": 1
+  "text": "The worst!",
+  "offerId": "65d31eafa4b315bc2103b83c",
+  "rating": 2
 }
 
 ###
 
 ## Получить комментарии для конкретного объявления
-GET http://localhost:8080/comments/65d317efa4b315bc2103b82f HTTP/1.1
+GET http://localhost:8080/comments/65d31eafa4b315bc2103b83c HTTP/1.1
 Content-Type: application/json

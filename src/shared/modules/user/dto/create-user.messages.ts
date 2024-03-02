@@ -14,6 +14,7 @@ export const CreateUserMessages = {
     lengthField: 'min length for password is 6, max is 12'
   },
   userStatus: {
-    invalid: 'userStatus must be a pro or regular'
+    invalid: 'userType must be a valid value'
   }
-};
+} as const;
+

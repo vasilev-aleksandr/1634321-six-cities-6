@@ -11,8 +11,5 @@ export class UserRdo {
   public avatarPath: string;
 
   @Expose()
-  public password: string;
-
-  @Expose()
   public userStatus: string;
 }
